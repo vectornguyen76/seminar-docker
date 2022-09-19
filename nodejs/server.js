@@ -1,46 +1,48 @@
+const fs = require('fs').promises;
+const exists = require('fs').exists;
+const path = require('path');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
 
-let userGoal = 'Learn Docker!';
-
-app.use(
-  bodyParser.urlencoded({
-    extended: false,
-  })
-);
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static('public'));
+app.use('/feedback', express.static('feedback'));
 
 app.get('/', (req, res) => {
-  res.send(`
-    <html>
-      <head>
-        <link rel="stylesheet" href="styles.css">
-      </head>
-      <body>
-        <section>
-          <h2>My Course Goal</h2>
-          <h3>${userGoal}</h3>
-        </section>
-        <form action="/store-goal" method="POST">
-          <div class="form-control">
-            <label>Course Goal</label>
-            <input type="text" name="goal">
-          </div>
-          <button>Set Course Goal</button>
-        </form>
-      </body>
-    </html>
-  `);
+  const filePath = path.join(__dirname, 'pages', 'feedback.html');
+  res.sendFile(filePath);
 });
 
-app.post('/store-goal', (req, res) => {
-  const enteredGoal = req.body.goal;
-  console.log(enteredGoal);
-  userGoal = enteredGoal;
-  res.redirect('/');
+app.get('/exists', (req, res) => {
+  const filePath = path.join(__dirname, 'pages', 'exists.html');
+  res.sendFile(filePath);
 });
 
-app.listen(80);
+app.post('/create', async (req, res) => {
+  const title = req.body.title;
+  const content = req.body.text;
+
+  const adjTitle = title.toLowerCase();
+
+  const tempFilePath = path.join(__dirname, 'temp', adjTitle + '.txt');
+  const finalFilePath = path.join(__dirname, 'feedback', adjTitle + '.txt');
+
+  console.log('TEST!!!!!');
+
+  await fs.writeFile(tempFilePath, content);
+  exists(finalFilePath, async (exists) => {
+    if (exists) {
+      res.redirect('/exists');
+    } else {
+      await fs.copyFile(tempFilePath, finalFilePath);
+      await fs.unlink(tempFilePath);
+      res.redirect('/');
+    }
+  });
+});
+
+app.listen(process.env.PORT);
