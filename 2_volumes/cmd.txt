@@ -1,0 +1,29 @@
+----------------------
+build: 
+docker build -t test_volume . 
+----------------------
+
+----------------------
+run without volume
+docker run -p 8000:8000 -d --name test_volume test_volume
+----------------------
+
+----------------------
+run with name volume
+docker run -p 8000:8000 -d --rm -v database:/app/database --name test_volume test_volume
+----------------------
+
+----------------------
+run with bind mount
+docker run -p 8000:8000 -d --rm -v C:\Users\DELL\Desktop\learn-docker\2_volumes:/app --name test_volume test_volume
+----------------------
+
+----------------------
+run with name volume and bind mount
+docker run -p 8000:8000 -d --rm -v database:/app/database -v C:\Users\DELL\Desktop\learn-docker\2_volumes:/app --name test_volume test_volume
+----------------------
+
+----------------------
+run with anomymous volume and bind mount
+docker run -p 8000:8000 -d --rm -v /app/database -v C:\Users\DELL\Desktop\learn-docker\2_volumes:/app --name test_volume test_volume
+----------------------

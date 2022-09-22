@@ -1,0 +1,27 @@
+--------------------
+run container database 
+docker run -d --rm --name mongodb mongo
+--------------------
+
+--------------------
+check IP container mongodb
+docker container inspect mongodb
+--------------------
+
+--------------------
+build and run app communicate hard code
+docker build -t test_network .
+docker run -d --rm --name test_network -p 3000:3000 test_network
+--------------------
+
+--------------------
+create network
+docker network create db_network
+--------------------
+
+--------------------
+communicate advance
+docker run -d --rm --name mongodb --network db_network mongo
+docker build -t test_network .
+docker run -d --rm --name test_network --network db_network -p 3000:3000 test_network
+--------------------
