@@ -5,13 +5,8 @@ services:
     container_name: nginx
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf
-    #   - ./fullchain.pem:/etc/letsencrypt/live/ {name domain} /fullchain.pem
-    #   - ./privkey.pem:etc/letsencrypt/live/seldep.qai.solutions/privkey.pem
-    #   - ./fullchain2.pem:/etc/letsencrypt/live/ {name domain} /fullchain2.pem
-    #   - ./privkey2.pem:etc/letsencrypt/live/seldep.qai.solutions/privkey2.pem
-
     ports:
-      - 81:80
+      - 80:80
     networks:
       - my-network
     depends_on:
@@ -43,14 +38,10 @@ services:
       - 5000:5000
     volumes:
       - ./:/var/www
-
-    # depends_on:
-    #   - services
     networks:
       my-network:
         aliases:
           - app_b
-  # services:
 
 networks:
   my-network:
