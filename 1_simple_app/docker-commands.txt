@@ -1,0 +1,10 @@
+----------------------
+build: 
+docker build -t simple_app . 
+----------------------
+
+----------------------
+run: 
+docker run -d --rm --name simple_app -p 3000:3000 simple_app
+----------------------
+
